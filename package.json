@@ -1,0 +1,10 @@
+{
+  "name": "mitrais-test",
+  "version": "1.0.0",
+  "scripts": {
+      "serve": "cd resources/frontend && npm run serve",
+      "build": "cd resources/frontend && npm run build"
+  },
+  "author": "cahyowhy01@gmail.com",
+  "license": "ISC"
+}

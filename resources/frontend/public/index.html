@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,initial-scale=1.0" name="viewport">
+    <link href="<%= BASE_URL %>favicon.ico" rel="icon">
+    <link href="/css/bulma-tooltip.min.css" rel="stylesheet">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+
+</head>
+<body>
+<noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+        Please enable it to continue.</strong>
+</noscript>
+<div id="app">
+    <!-- notification wrapper -->
+    <notifications animation-name="v-fade-top" group="default"
+                   position="top right" style="top: 1rem; right: 1rem">
+    </notifications>
+
+    <!-- main view container -->
+    <router-view></router-view>
+</div>
+<!-- built files will be auto injected -->
+</body>
+</html>

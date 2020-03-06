@@ -1,0 +1,142 @@
+.wrapper-c {
+    display: inline-block;
+    & + .wrapper-c {
+        margin-left: 1rem;
+    }
+}
+
+.icon-chevron, .icon-arrow, .icon_chevron_v, .icon-gear, .icon-pivot {
+    display: inline-block;
+    width: 12px;
+    height: 18px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.g-button, .g-input, .g-select .select {
+    &.is-sharped {
+        border-radius: 0px !important;
+    }
+}
+
+.g-input.is-static {
+    background-color: $grey-lighten;
+    padding-left: .5rem;
+}
+
+.field.move-tooltip.is-tooltip-active {
+    &::before {
+        transform: translate(-50%, 21px);
+    }
+    &::after {
+        margin-top: 21px;
+    }
+}
+
+.g-select .select.is-static {
+    select {
+        border: none;
+        padding-left: 0;
+    }
+
+    &:after {
+        display: none;
+    }
+}
+
+.g-input-wrp {
+    .count-help {
+        float: right;
+    }
+}
+
+.g-radio.radio, .g-checkbox.checkbox {
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    input {
+        position: absolute;
+        left: 0;
+        opacity: 0;
+        outline: none;
+        z-index: -1;
+    }
+}
+
+.g-radio.radio {
+    .checked {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid $grey-darker;
+        & + span.control {
+            margin-left: .5rem;
+        }
+    }
+    input[type=radio]:checked + .checked::after {
+        content: '';
+        background-color: $grey-darker;
+        display: block;
+        height: 100%;
+        border: 2px solid white;
+        border-radius: 50%;
+    }
+
+    @each $name, $pair in $colors_type {
+        &.is-#{$name} {
+            $color: nth($pair, 1);
+            .checked {
+                border: 2px solid $color;
+            }
+            input[type=radio]:checked + .checked::after {
+                background-color: $color;
+            }
+        }
+    }
+}
+
+.g-checkbox.checkbox {
+    input[type=checkbox] {
+        &:checked + .checked {
+            background: $grey-darker url(checkmark($white-ter)) no-repeat center center;
+        }
+        &:not(:checked) + .checked {
+            box-sizing: border-box;
+        }
+        &:indeterminate + .checked {
+            background: $grey-darker url(indeterminate($white-ter)) no-repeat center center;
+        }
+    }
+
+    .checked {
+        width: 1.25em;
+        height: 1.25em;
+        flex-shrink: 0;
+        border-radius: 5px;
+        border: 2px solid $grey-darker;
+        + .control {
+            margin-left: .5rem;
+        }
+    }
+
+    @each $name, $pair in $colors_type {
+        &.is-#{$name} {
+            $color: nth($pair, 1);
+            $color-invert: nth($pair, 2);
+            .checked {
+                border: 2px solid $color;
+            }
+            input[type=checkbox]:checked + .checked {
+                background: $color url(checkmark($color-invert)) no-repeat center center;
+            }
+            input[type=checkbox]:indeterminate + .checked {
+                background: $color url(indeterminate($color-invert)) no-repeat center center;
+            }
+        }
+    }
+}
+
+.g-button.is-loading {
+    min-width: 70px;
+}

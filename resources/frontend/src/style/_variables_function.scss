@@ -1,0 +1,301 @@
+// Helper function to replace characters in a string
+@function str-replace($string, $search, $replace: '') {
+    $index: str-index($string, $search);
+    @return if($index,
+        str-slice($string, 1, $index - 1) + $replace +
+        str-replace(str-slice($string, $index +
+        str-length($search)), $search, $replace),
+        $string);
+}
+
+// Encode svg function by http://codepen.io/jakob-e/pen/doMoML
+@function svg-encode($svg) {
+    // Chunk up string in order to avoid "stack level too deep" error
+    $encoded: '';
+    $slice: 2000;
+    $index: 0;
+    $loops: ceil(str-length($svg)/$slice);
+    @for $i from 1 through $loops {
+        $chunk: str-slice($svg, $index, $index + $slice - 1);
+        // Encode
+        $chunk: str-replace($chunk, '"', '\'');
+        $chunk: str-replace($chunk, '%', '%25');
+        $chunk: str-replace($chunk, '#', '%23');
+        $chunk: str-replace($chunk, '{', '%7B');
+        $chunk: str-replace($chunk, '}', '%7D');
+        $chunk: str-replace($chunk, '<', '%3C');
+        $chunk: str-replace($chunk, '>', '%3E');
+
+        $encoded: #{$encoded}#{$chunk};
+        $index: $index + $slice;
+    }
+    @return "data:image/svg+xml,#{$encoded}";
+}
+
+@function checkmark($color) {
+    $start: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">';
+    $content: '<path style="fill:#{$color}" d="M 0.04038059,0.6267767 0.14644661,0.52071068 0.42928932,0.80355339 0.3232233,0.90961941 z M 0.21715729,0.80355339 0.85355339,0.16715729 0.95961941,0.2732233 0.3232233,0.90961941 z"></path>';
+    $end: '</svg>';
+
+    @return svg-encode("#{$start}#{$content}#{$end}");
+}
+
+@function indeterminate($color) {
+    $start: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">';
+    $content: '<rect style="fill:#{$color}" width="0.7" height="0.2" x=".15" y=".4"></rect>';
+    $end: '</svg>';
+
+    @return svg-encode("#{$start}#{$content}#{$end}");
+}
+
+@function arrow($color, $is_down: true) {
+    $start: '<svg width="12" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">';
+    $content: if($is_down, '<path style="fill:#{$color}" d="M12 24l-8-9h6v-15h4v15h6z"/>', '<path style="fill:#{$color}" d="M12 0l8 9h-6v15h-4v-15h-6z"/>');
+    $end: '</svg>';
+
+    @return svg-encode("#{$start}#{$content}#{$end}");
+}
+
+@function chevron($color, $is_down: true) {
+    $start: '<svg width="12" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">';
+    $content: if($is_down, '<path style="fill:#{$color}" d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z"/>',
+        '<path style="fill:#{$color}" d="M0 16.67l2.829 2.83 9.175-9.339 9.167 9.339 2.829-2.83-11.996-12.17z"/>');
+    $end: '</svg>';
+
+    @return svg-encode("#{$start}#{$content}#{$end}");
+}
+
+@function chevron_vertical($color, $is_right: true) {
+    $start: '<svg width="12" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">';
+    $content: if($is_right, '<path style="fill:#{$color}" d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z"/>',
+        '<path style="fill:#{$color}" d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z"/>');
+    $end: '</svg>';
+
+    @return svg-encode("#{$start}#{$content}#{$end}");
+}
+
+@function gear_solid($color) {
+    $start: '<svg width="12" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">';
+    $content: '<path style="fill:#{$color}" d="M 10.490234 2 C 10.011234 2 9.6017656 2.3385938 9.5097656 2.8085938 L 9.1757812 4.5234375 C 8.3550224 4.8338012 7.5961042 5.2674041 6.9296875 5.8144531 L 5.2851562 5.2480469 C 4.8321563 5.0920469 4.33375 5.2793594 4.09375 5.6933594 L 2.5859375 8.3066406 C 2.3469375 8.7216406 2.4339219 9.2485 2.7949219 9.5625 L 4.1132812 10.708984 C 4.0447181 11.130337 4 11.559284 4 12 C 4 12.440716 4.0447181 12.869663 4.1132812 13.291016 L 2.7949219 14.4375 C 2.4339219 14.7515 2.3469375 15.278359 2.5859375 15.693359 L 4.09375 18.306641 C 4.33275 18.721641 4.8321562 18.908906 5.2851562 18.753906 L 6.9296875 18.1875 C 7.5958842 18.734206 8.3553934 19.166339 9.1757812 19.476562 L 9.5097656 21.191406 C 9.6017656 21.661406 10.011234 22 10.490234 22 L 13.509766 22 C 13.988766 22 14.398234 21.661406 14.490234 21.191406 L 14.824219 19.476562 C 15.644978 19.166199 16.403896 18.732596 17.070312 18.185547 L 18.714844 18.751953 C 19.167844 18.907953 19.66625 18.721641 19.90625 18.306641 L 21.414062 15.691406 C 21.653063 15.276406 21.566078 14.7515 21.205078 14.4375 L 19.886719 13.291016 C 19.955282 12.869663 20 12.440716 20 12 C 20 11.559284 19.955282 11.130337 19.886719 10.708984 L 21.205078 9.5625 C 21.566078 9.2485 21.653063 8.7216406 21.414062 8.3066406 L 19.90625 5.6933594 C 19.66725 5.2783594 19.167844 5.0910937 18.714844 5.2460938 L 17.070312 5.8125 C 16.404116 5.2657937 15.644607 4.8336609 14.824219 4.5234375 L 14.490234 2.8085938 C 14.398234 2.3385937 13.988766 2 13.509766 2 L 10.490234 2 z M 12 8 C 14.209 8 16 9.791 16 12 C 16 14.209 14.209 16 12 16 C 9.791 16 8 14.209 8 12 C 8 9.791 9.791 8 12 8 z"></path>';
+    $end: '</svg>';
+
+    @return svg-encode("#{$start}#{$content}#{$end}");
+}
+
+@function pivot($color) {
+    $start: '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" version="1.1">';
+    $content: '<g id="surface1"><path style="fill:#{$color}" d="M 4 2 C 2.898438 2 2 2.898438 2 4 L 2 20 C 2 21.101563 2.898438 22 4 22 L 20 22 C 21.101563 22 22 21.101563 22 20 L 22 4 C 22 2.898438 21.101563 2 20 2 Z M 8 4 L 10 4 L 10 8 L 20 8 L 20 20 L 8 20 L 8 10 L 4 10 L 4 8 L 8 8 Z M 16 9 L 13 12 L 15 12 L 15 14 C 15 14.566406 14.566406 15 14 15 L 12 15 L 12 13 L 9 16 L 12 19 L 12 17 L 14 17 C 15.644531 17 17 15.644531 17 14 L 17 12 L 19 12 Z "></path></g>';
+    $end: '</svg>';
+
+    @return svg-encode("#{$start}#{$content}#{$end}");
+}
+
+@mixin bulma_box_style() {
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 3px rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .1);
+    color: #4a4a4a;
+    display: block;
+    padding: 1.25rem;
+}
+
+@mixin print_kartu_ujian() {
+    @media print {
+        #print-kartu {
+            width: 210mm;
+            margin: 0 !important;
+        }
+
+        #print-kartu, #print-kartu * {
+            visibility: visible;
+        }
+
+        #print-kartu * {
+            font-size: 10px;
+        }
+
+        .kuw-wrp-wrapper {
+            width: 210mm;
+            height: 297mm;
+        }
+
+        .kuw-wrp {
+            width: 95mm !important;
+            height: 74mm !important;
+            margin: 1.25mm;
+
+            .kartu-ujian-siswa {
+                .last-info {
+                    .level-left {
+                        width: 56px;
+                        height: 56px;
+                        margin-right: 1.25rem;
+                    }
+
+                    .level-right {
+                        img {
+                            width: 56px;
+                            height: 56px;
+                        }
+                    }
+
+                    .media-content {
+                        br:nth-child(3) {
+                            display: none;
+                        }
+                    }
+                }
+
+                .content-card {
+                    margin-bottom: 0;
+
+                    .field.is-horizontal:not(:last-child) {
+                        margin-bottom: 0rem;
+                    }
+                }
+            }
+
+            &:nth-child(6n) {
+                margin-bottom: 1cm;
+            }
+        }
+    }
+}
+
+$mobile_size: 768px;
+$tablet_size_min: 769px;
+$tablet_size_max: 1023px;
+$desktop_size_min: 1024px;
+$desktop_size_max: 1215px;
+$widescreen_size_min: 1216px;
+$widescreen_size_max: 1407px;
+$full_hd_size: 1408px;
+
+$grey-lighten: #f5f5f7;
+$yellow: rgb(254, 241, 0);
+$color-primary: #31632b;
+$color-purple: #6402c5;
+$color-primary-young: #409243;
+$color-dark: #465161; // use this on header panel
+$color-text-mute: #8b95a5;
+$color-background: #f4f7fc;
+$primary: $color-primary-young !default;
+
+$alternate-grey-1: #e8ebf1;
+
+$font_family_custom: "Roboto", -apple-system, BlinkMacSystemFont, "Oxygen", "Ubuntu", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+$size-1: 42px !default$size-2: 35px !default$size-3: 28px !default$size-4: 21px !default$size-5: 17.5px !default$size-6: 14px !default$size-7: 10.5px !default@import "~bulma/sass/utilities/all";
+$colors_type: (
+    "info": ($info, $info-invert),
+    "purple": ($color-purple, $white),
+    "link": ($link, $link-invert),
+    "success": ($success, $success-invert),
+    "warning": ($warning, $warning-invert),
+    "danger": ($danger, $danger-invert),
+    "dark": ($dark, $dark-invert),
+    "primary": ($color-primary, white),
+    "primary-young": ($color-primary-young, white),
+);
+
+@mixin fl_row($jc: null, $ai: null) {
+    display: flex;
+    flex-direction: row;
+
+    @if ($jc) {
+        justify-content: $jc;
+    }
+
+    @if ($ai) {
+        align-items: $ai;
+    }
+}
+
+@mixin fl_col($jc: null, $ai: null) {
+    display: flex;
+    flex-direction: column;
+
+    @if ($jc) {
+        justify-content: $jc;
+    }
+
+    @if ($ai) {
+        align-items: $ai;
+    }
+}
+
+@mixin max_wide_screen() {
+    margin: 0 auto;
+    max-width: 1152px;
+}
+
+@mixin fill_fixed_absolute($useFixed: false, $width: 100%, $height: 100%) {
+    width: $width;
+    height: $height;
+    @if $useFixed {
+        position: fixed;
+    } @else {
+        position: absolute;
+    }
+}
+
+@mixin fill_fixed($width: 100%, $height: 100%) {
+    width: $width;
+    height: $height;
+    position: fixed;
+}
+
+@mixin b_sh_def($is_alternative: false, $is_text_shadow: false) {
+    @if ($is_text_shadow) {
+        @if ($is_alternative) {
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        } @else {
+            text-shadow: 0 2px 6px 0 hsla(0, 0%, 0%, 0.2);
+        }
+    } @else {
+        @if ($is_alternative) {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        } @else {
+            box-shadow: 0 2px 6px 0 hsla(0, 0%, 0%, 0.2);
+        }
+    }
+}
+
+@mixin image_bg {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+@mixin phone {
+    @media only screen and (max-width: #{$mobile_size }) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: #{$tablet_size_min}) and (max-width: #{$tablet_size_max }) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: #{$desktop_size_min}) and (max-width: #{$desktop_size_max}) {
+        @content;
+    }
+}
+
+@mixin wide_screen {
+    @media (min-width: #{$widescreen_size_min}) and (max-width: #{$widescreen_size_max}) {
+        @content;
+    }
+}
+
+@mixin full_hd_size {
+    @media only screen and (min-width: #{$full_hd_size}) {
+        @content;
+    }
+}
+
+@mixin overlay {
+    background-color: rgba(10, 10, 10, 0.86);
+}
