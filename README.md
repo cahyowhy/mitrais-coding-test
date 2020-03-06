@@ -22,3 +22,13 @@ If you discover a security vulnerability within Lumen, please send an e-mail to 
 ## License
 
 The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## How to run project
+### Run web service
+1. cp .env from .env.example. Fill all the DB_ prefix key value with your local environment
+2. run `php -S localhost:8000 -t public` on your terminal
+
+### Run frontend service
+1. run package.json from main dir
+2. `npm run serve` to serve on development
+3. `npm run build` to build project
