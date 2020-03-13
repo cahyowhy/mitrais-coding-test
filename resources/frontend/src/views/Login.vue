@@ -2,6 +2,18 @@
 <template>
     <div class="login-page">
         <user-info :user="user" type="info" v-if="user.id"/>
+        <div class="message is-danger"
+             v-if="hasSubmit && user.errorMessagesLogin.length > 0">
+            <div class="message-body">
+                <ul class="menu-list">
+                    <li :key="idx"
+                        v-for="(message, idx) in user.errorMessagesLogin">
+                        {{message}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
         <div class="box">
             <div class="image form-logo">
                 <img src="/img/logo.jpg"/>
@@ -47,7 +59,11 @@
 
         public isLoading = false;
 
+        public hasSubmit = false;
+
         public async doLogin() {
+            this.hasSubmit = true;
+
             if (this.user.hasValidLogin() && !this.isLoading) {
                 const {email, mobile_number} = this.user;
 
@@ -76,6 +92,10 @@
         align-items: center;
         margin: 32px 0;
         @include fl_col(center, center);
+
+        .message {
+            @include b_sh_def(true);
+        }
 
         .box, .message {
             max-width: 350px;

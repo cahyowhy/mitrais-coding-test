@@ -1,17 +1,30 @@
 <!--suppress ALL -->
 <template>
     <div class="register-page">
-        <div class="image">
-            <img src="/img/signup-image.webp">
+        <div class="left-page">
+            <div class="message is-danger"
+                 v-if="hasSubmit && user.errorMessagesRegister.length > 0">
+                <div class="message-body">
+                    <ul class="menu-list">
+                        <li :key="idx"
+                            v-for="(message, idx) in user.errorMessagesRegister">
+                            {{message}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="image">
+                <img src="/img/signup-image.webp">
+            </div>
         </div>
-        <div class="box" :class="isLoading ? 'form-loading' : ''">
+        <div :class="isLoading ? 'form-loading' : ''" class="box">
             <p class="title is-5">Registrasi</p>
             <p class="subtitle is-6">Registrasi terlebih dahulu</p>
             <form @submit.prevent="doSave">
                 <common-field :label="$t('label.mobile_number')" :message="user.mobileNumberFeedback().message"
                               :type="getInputType(user.mobileNumberFeedback().type)"
                               message-as-tooltip>
-                    <common-input v-model="user.mobile_number" :disabled="isLoading" v-unicode="{from: 48, to: 57}"/>
+                    <common-input :disabled="isLoading" v-model="user.mobile_number" v-unicode="{from: 48, to: 57}"/>
                 </common-field>
                 <common-field :label="$t('label.firstname')" :message="user.firstnameFeedback().message"
                               :type="getInputType(user.firstnameFeedback().type)"
@@ -24,20 +37,21 @@
                     <common-input :disabled="isLoading" v-model="user.lastname"/>
                 </common-field>
                 <common-field :label="$t('label.dob')">
-                    <common-datepicker v-model="user.birthdate" :disabledDatePicker="isLoading"
-                                       :type="getInputType(user.lastnameFeedback().type)"/>
+                    <common-datepicker :disabledDatePicker="isLoading"
+                                       :type="getInputType(user.lastnameFeedback().type)"
+                                       v-model="user.birthdate"/>
                 </common-field>
                 <common-field :label="$t('label.gender')">
                     <div class="level">
                         <div class="level-item" style="justify-content: flex-start;">
-                            <common-radiobutton name="jenis-kelamin" native-value="L"
-                                                v-model="user.gender" :disabled="isLoading">
+                            <common-radiobutton :disabled="isLoading" name="jenis-kelamin"
+                                                native-value="L" v-model="user.gender">
                                 {{$t('label.man')}}
                             </common-radiobutton>
                         </div>
                         <div class="level-item" style="justify-content: flex-start;">
-                            <common-radiobutton name="jenis-kelamin" native-value="P"
-                                                v-model="user.gender" :disabled="isLoading">
+                            <common-radiobutton :disabled="isLoading" name="jenis-kelamin"
+                                                native-value="P" v-model="user.gender">
                                 {{$t('label.woman')}}
                             </common-radiobutton>
                         </div>
@@ -45,7 +59,7 @@
                 </common-field>
                 <common-field :label="$t('label.email')" :message="user.emailFeedback().message"
                               :type="getInputType(user.emailFeedback().type)" message-as-tooltip>
-                    <common-input v-model="user.email" :disabled="isLoading"/>
+                    <common-input :disabled="isLoading" v-model="user.email"/>
                 </common-field>
                 <common-field is-grouped position="right">
                     <div class="control" v-if="isSuccess">
@@ -86,11 +100,15 @@
 
         public isSuccess = false;
 
+        public hasSubmit = false;
+
         public getInputType(type = "") {
             return this.isLoading ? 'static' : type;
         }
 
         public async doSave() {
+            this.hasSubmit = true;
+
             if (this.user.hasValid() && !this.isLoading) {
                 this.isLoading = true;
                 await timeout(500);
@@ -122,14 +140,17 @@
             }
         }
 
-        .image {
+        .left-page {
             width: 450px;
             margin-right: 1.5rem;
-            display: flex;
-            justify-content: center;
+            @include fl_col(center, null);
 
-            img {
+            .image img {
                 max-width: 300px;
+            }
+
+            .message {
+                @include b_sh_def(true);
             }
         }
 

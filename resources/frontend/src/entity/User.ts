@@ -77,6 +77,18 @@ export default class User extends BaseEntity {
         return this.emailFeedback().valid && this.mobileNumberFeedback().valid;
     }
 
+    public get errorMessagesRegister(): Array<string> {
+        return ['firstnameFeedback', 'lastnameFeedback', 'emailFeedback', 'mobileNumberFeedback']
+            .filter((key) => !this[key]()['valid'])
+            .map((key: string) => `${AppConfig.getVm().$t('label.' + this[key]()['key'])} : ${this[key]()['message']}`);
+    }
+
+    public get errorMessagesLogin(): Array<string> {
+        return ['emailFeedback', 'mobileNumberFeedback']
+            .filter((key) => !this[key]()['valid'])
+            .map((key: string) => `${AppConfig.getVm().$t('label.' + this[key]()['key'])} : ${this[key]()['message']}`);
+    }
+
     public static OnSerialized(instance: User, json): void {
         if (parseInt(json.id) === 0) {
             delete json.id;

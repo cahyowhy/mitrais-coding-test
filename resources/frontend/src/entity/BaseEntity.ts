@@ -18,7 +18,7 @@ export default class BaseEntity implements EntityAware {
       * make sure the property is number or string
       * */
     public defaultPropertyFeedback(property, validProp, paramMessage = ''):
-        { valid: boolean; type: string; message: string } {
+        { valid: boolean; type: string; message: string; key: string } {
         const propertyValue = this[property];
         const valid = typeof validProp === 'boolean' ? validProp : Boolean(propertyValue);
         let message = '';
@@ -30,7 +30,7 @@ export default class BaseEntity implements EntityAware {
             message = valid ? '' : AppConfig.getVm().$t('text.must_not_empty').toString();
         }
 
-        return {valid, type, message};
+        return {valid, type, message, key: property};
     }
 
     public static OnSerialized(instance: BaseEntity, json): void {
