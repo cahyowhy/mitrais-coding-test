@@ -25,16 +25,18 @@ The Lumen framework is open-sourced software licensed under the [MIT license](ht
 
 ## How to run project
 ### Run web service
-1. create `.env` file from main dir.  You can copy from `.env.example`.
-2. run your mysql local environment. Create the database, make sure the value its from `DB_DATABASE` key from your `.env` file
-2. Fill all the DB_ prefix key value with your local environment
-3. run your mysql local environment
-3. run `php artisan migrate` to create migration
-4. run `php artisan db:seed` to seed the user data on mysql
-5. build frontend SERVICE from step 1 & 3 bellow on how to `Run frontend service`
-5. run `php -S localhost:8000 -t public` on your terminal
+1. install the dependencies first, use `composer i` on main dir
+2. create `.env` file from main dir.  You can copy from `.env.example`.
+3. run your mysql local environment. Create the database, make sure the value its from `DB_DATABASE` key from your `.env` file
+4. Fill all the DB_ prefix key value with your local environment
+5. run your mysql local environment
+6. run `php artisan migrate` to create migration
+7. run `php artisan db:seed` to seed the user data on mysql
+8. do `build project` on frontend service from step 1 & 3 bellow on how to `Run frontend service`
+9. run `php -S localhost:8000 -t public` on your terminal to run the web
 
-### Run frontend service
+### Run only frontend service
 1. install the dependencies first, use `npm i` on main dir
 2. `npm run serve` to run web on development
 3. `npm run build` to build project
+4. `npm run test:unit` to do test unit on frontend
